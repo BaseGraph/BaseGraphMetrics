@@ -27,8 +27,8 @@ double getReciprocity(const DirectedGraph& graph) {
     size_t reciprocalEdgeNumber = 0;
 
     for (const VertexIndex& vertex: graph)
-        for (const VertexIndex& neighbour: graph.getOutEdgesOfIdx(vertex))
-            if (vertex < neighbour && graph.hasEdgeIdx(neighbour, vertex))
+        for (const VertexIndex& neighbour: graph.getOutEdgesOf(vertex))
+            if (vertex < neighbour && graph.hasEdge(neighbour, vertex))
                 reciprocalEdgeNumber += 2;
 
     return reciprocalEdgeNumber / (double) graph.getEdgeNumber();
@@ -38,8 +38,8 @@ vector<size_t> getReciprocalDegrees(const DirectedGraph& graph) {
     vector<size_t> reciprocities(graph.getSize(), 0);
 
     for (const VertexIndex& vertex: graph) {
-        for (const VertexIndex& neighbour: graph.getOutEdgesOfIdx(vertex)) {
-            if (vertex < neighbour && graph.hasEdgeIdx(neighbour, vertex)) {
+        for (const VertexIndex& neighbour: graph.getOutEdgesOf(vertex)) {
+            if (vertex < neighbour && graph.hasEdge(neighbour, vertex)) {
                     reciprocities[vertex]++;
                     reciprocities[neighbour]++;
             }
@@ -60,7 +60,7 @@ std::vector<double> getJaccardReciprocities(const DirectedGraph& graph, const st
 
 
     for (const VertexIndex& vertex: graph)
-        jaccardReciprocities[vertex] /= inDegrees[vertex] + graph.getOutDegreeOfIdx(vertex) - (double) reciprocities[vertex];
+        jaccardReciprocities[vertex] /= inDegrees[vertex] + graph.getOutDegreeOf(vertex) - (double) reciprocities[vertex];
 
     return jaccardReciprocities;
 }
@@ -76,7 +76,7 @@ std::vector<double> getReciprocityRatios(const DirectedGraph& graph, const std::
 
 
     for (const VertexIndex& vertex: graph)
-        reciprocityRatios[vertex] *= (double) 2/(inDegrees[vertex] + graph.getOutDegreeOfIdx(vertex));
+        reciprocityRatios[vertex] *= (double) 2/(inDegrees[vertex] + graph.getOutDegreeOf(vertex));
 
     return reciprocityRatios;
 }
@@ -108,7 +108,7 @@ vector<double> getUndirectedLocalClusteringCoefficients(const DirectedGraph& gra
     size_t undirectedDegree;
 
     for (const VertexIndex& vertex: graph) {
-        undirectedDegree = getUnionOfLists(graph.getOutEdgesOfIdx(vertex), inEdges[vertex]).size();
+        undirectedDegree = getUnionOfLists(graph.getOutEdgesOf(vertex), inEdges[vertex]).size();
         if (undirectedDegree>1)
             localClusteringCoefficients[vertex] /= undirectedDegree*(undirectedDegree-1)/2.;
     }
@@ -126,9 +126,9 @@ double getUndirectedGlobalClusteringCoefficient(const DirectedGraph& graph, cons
 
     size_t totalDegree, localTriangles, triadNumber(0);
     for (VertexIndex& vertex: graph) {
-        totalDegree = inEdges[vertex].size() + graph.getOutDegreeOfIdx(vertex);
+        totalDegree = inEdges[vertex].size() + graph.getOutDegreeOf(vertex);
 
-        localTriangles = getUnionOfLists(graph.getOutEdgesOfIdx(vertex), inEdges[vertex]).size();
+        localTriangles = getUnionOfLists(graph.getOutEdgesOf(vertex), inEdges[vertex]).size();
         if (totalDegree > 1)
             triadNumber += localTriangles*(localTriangles-1)/2;
     }
@@ -146,7 +146,7 @@ list<array<VertexIndex, 3>> findAllDirectedTriangles(const DirectedGraph& graph,
     AdjacencyLists undirectedEdges(graph.getSize());
 
     for(const VertexIndex& vertex1: graph)
-        undirectedEdges[vertex1] = getUnionOfLists(graph.getOutEdgesOfIdx(vertex1), inEdges[vertex1]);
+        undirectedEdges[vertex1] = getUnionOfLists(graph.getOutEdgesOf(vertex1), inEdges[vertex1]);
 
 
     for(const VertexIndex& vertex1: graph)
@@ -214,8 +214,8 @@ map<string, size_t> getTriangleSpectrum(const DirectedGraph& graph, const list<a
         triangleEdgesRepresentation = "";
 
         for (auto& edge: triangleEdges) {
-            ij_isEdge = graph.hasEdgeIdx(triangle[edge.first], triangle[edge.second]);
-            ji_isEdge = graph.hasEdgeIdx(triangle[edge.second], triangle[edge.first]);
+            ij_isEdge = graph.hasEdge(triangle[edge.first], triangle[edge.second]);
+            ji_isEdge = graph.hasEdge(triangle[edge.second], triangle[edge.first]);
 
             if (ij_isEdge && !ji_isEdge)
                 triangleEdgesRepresentation += "-> ";

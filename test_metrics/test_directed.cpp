@@ -16,14 +16,14 @@ using namespace BaseGraph;
 
 TEST(HouseGraph_directed, when_findingTriangles_expect_returnAllUndirectedTriangles) {
     DirectedGraph graph(7);
-    graph.addReciprocalEdgeIdx(0, 2);
-    graph.addEdgeIdx(0, 3);
-    graph.addEdgeIdx(2, 1);
-    graph.addEdgeIdx(3, 1);
-    graph.addEdgeIdx(1, 4);
-    graph.addEdgeIdx(2, 3);
-    graph.addEdgeIdx(3, 4);
-    graph.addEdgeIdx(5, 3);
+    graph.addReciprocalEdge(0, 2);
+    graph.addEdge(0, 3);
+    graph.addEdge(2, 1);
+    graph.addEdge(3, 1);
+    graph.addEdge(1, 4);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 4);
+    graph.addEdge(5, 3);
 
     list<array<BaseGraph::VertexIndex, 3>> expectedTriangles = {{0, 2, 3}, {1, 2, 3}, {1, 3, 4}};
     EXPECT_EQ(metrics::findAllDirectedTriangles(graph), expectedTriangles);
@@ -41,9 +41,9 @@ static void expectClassifiedAs(map<string, size_t> spectrum, const string& trian
 static void underRotationsExpectClassifyTriangleAs(
         const DirectedGraph& graph, const array<BaseGraph::VertexIndex, 3>& triangle, const string& triangleType) {
     array<BaseGraph::VertexIndex, 3> rotatedTriangle;
-    for (const auto& rotationIdx: list<array<BaseGraph::VertexIndex, 3>>({{0, 1, 2}, {1, 2, 0}, {2, 0, 1}}) ) {
+    for (const auto& rotation: list<array<BaseGraph::VertexIndex, 3>>({{0, 1, 2}, {1, 2, 0}, {2, 0, 1}}) ) {
         for (BaseGraph::VertexIndex idx=0; idx<3; idx++)
-            rotatedTriangle[idx] = triangle[rotationIdx[idx]];
+            rotatedTriangle[idx] = triangle[rotation[idx]];
 
         expectClassifiedAs(metrics::getTriangleSpectrum(graph, {triangle}), triangleType);
     }
@@ -51,23 +51,23 @@ static void underRotationsExpectClassifyTriangleAs(
 
 TEST(DirectedTriangleSpectrum, when_clockwiseCycles_expect_classifiesTrianglesProperly) {
     DirectedGraph graph(10);
-    graph.addEdgeIdx(0, 1);
-    graph.addEdgeIdx(1, 2);
-    graph.addEdgeIdx(2, 0);
-    graph.addEdgeIdx(1, 3);
-    graph.addEdgeIdx(2, 3);
+    graph.addEdge(0, 1);
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 0);
+    graph.addEdge(1, 3);
+    graph.addEdge(2, 3);
 
-    graph.addEdgeIdx(3, 4);
-    graph.addReciprocalEdgeIdx(4, 5);
-    graph.addEdgeIdx(5, 3);
-    graph.addEdgeIdx(4, 6);
-    graph.addEdgeIdx(5, 6);
+    graph.addEdge(3, 4);
+    graph.addReciprocalEdge(4, 5);
+    graph.addEdge(5, 3);
+    graph.addEdge(4, 6);
+    graph.addEdge(5, 6);
 
-    graph.addEdgeIdx(6, 7);
-    graph.addReciprocalEdgeIdx(7, 8);
-    graph.addReciprocalEdgeIdx(8, 6);
-    graph.addReciprocalEdgeIdx(7, 9);
-    graph.addReciprocalEdgeIdx(8, 9);
+    graph.addEdge(6, 7);
+    graph.addReciprocalEdge(7, 8);
+    graph.addReciprocalEdge(8, 6);
+    graph.addReciprocalEdge(7, 9);
+    graph.addReciprocalEdge(8, 9);
 
     underRotationsExpectClassifyTriangleAs(graph, {0, 1, 2}, "3cycle");
     underRotationsExpectClassifyTriangleAs(graph, {1, 2, 3}, "3nocycle");
@@ -79,21 +79,21 @@ TEST(DirectedTriangleSpectrum, when_clockwiseCycles_expect_classifiesTrianglesPr
 
 TEST(DirectedTriangleSpectrum, when_counterClockwiseCycles_expect_classifiesTrianglesProperly) {
     DirectedGraph graph(9);
-    graph.addEdgeIdx(0, 2);
-    graph.addEdgeIdx(2, 1);
-    graph.addEdgeIdx(1, 0);
-    graph.addEdgeIdx(3, 1);
-    graph.addEdgeIdx(3, 2);
+    graph.addEdge(0, 2);
+    graph.addEdge(2, 1);
+    graph.addEdge(1, 0);
+    graph.addEdge(3, 1);
+    graph.addEdge(3, 2);
 
-    graph.addEdgeIdx(3, 5);
-    graph.addReciprocalEdgeIdx(5, 4);
-    graph.addEdgeIdx(4, 3);
-    graph.addEdgeIdx(6, 4);
-    graph.addEdgeIdx(6, 5);
+    graph.addEdge(3, 5);
+    graph.addReciprocalEdge(5, 4);
+    graph.addEdge(4, 3);
+    graph.addEdge(6, 4);
+    graph.addEdge(6, 5);
 
-    graph.addEdgeIdx(7, 6);
-    graph.addReciprocalEdgeIdx(7, 8);
-    graph.addReciprocalEdgeIdx(8, 6);
+    graph.addEdge(7, 6);
+    graph.addReciprocalEdge(7, 8);
+    graph.addReciprocalEdge(8, 6);
 
     underRotationsExpectClassifyTriangleAs(graph, {0, 1, 2}, "3cycle");
     underRotationsExpectClassifyTriangleAs(graph, {1, 2, 3}, "3nocycle");
@@ -104,28 +104,28 @@ TEST(DirectedTriangleSpectrum, when_counterClockwiseCycles_expect_classifiesTria
 
 TEST(directedDensity, when_fiveEdgesAndNodes_expectDensityOfAQuarter){
     DirectedGraph graph(5);
-    graph.addEdgeIdx(0, 1);
-    graph.addEdgeIdx(0, 2);
-    graph.addEdgeIdx(0, 3);
-    graph.addEdgeIdx(0, 4);
-    graph.addEdgeIdx(1, 4);
+    graph.addEdge(0, 1);
+    graph.addEdge(0, 2);
+    graph.addEdge(0, 3);
+    graph.addEdge(0, 4);
+    graph.addEdge(1, 4);
     EXPECT_EQ(metrics::getDensity(graph), 0.25);
 }
 
 TEST(reciprocity, when_HalfReciprocitalEdges_expectHalf){
     DirectedGraph graph(5);
-    graph.addReciprocalEdgeIdx(0, 1);
-    graph.addEdgeIdx(2, 0);
-    graph.addEdgeIdx(1, 3);
+    graph.addReciprocalEdge(0, 1);
+    graph.addEdge(2, 0);
+    graph.addEdge(1, 3);
 
     EXPECT_EQ(metrics::getReciprocity(graph), .5);
 }
 
 TEST(reciprocities, when_twoReciprocitalEdges_expectOne){
     DirectedGraph graph(5);
-    graph.addReciprocalEdgeIdx(0, 1);
-    graph.addEdgeIdx(2, 0);
-    graph.addReciprocalEdgeIdx(1, 3);
+    graph.addReciprocalEdge(0, 1);
+    graph.addEdge(2, 0);
+    graph.addReciprocalEdge(1, 3);
 
     auto reciprocalDegrees = metrics::getReciprocalDegrees(graph);
     EXPECT_EQ(reciprocalDegrees[0], 1);
@@ -137,11 +137,11 @@ TEST(reciprocities, when_twoReciprocitalEdges_expectOne){
 
 TEST(jaccardReciprocity, expect_correctReciprocities){
     DirectedGraph graph(5);
-    graph.addReciprocalEdgeIdx(0, 2);
-    graph.addEdgeIdx(2, 3);
-    graph.addReciprocalEdgeIdx(1, 3);
-    graph.addReciprocalEdgeIdx(1, 4);
-    graph.addEdgeIdx(4, 3);
+    graph.addReciprocalEdge(0, 2);
+    graph.addEdge(2, 3);
+    graph.addReciprocalEdge(1, 3);
+    graph.addReciprocalEdge(1, 4);
+    graph.addEdge(4, 3);
 
     auto jaccardReciprocity = metrics::getJaccardReciprocities(graph);
     EXPECT_EQ(jaccardReciprocity[0], 1);
@@ -153,11 +153,11 @@ TEST(jaccardReciprocity, expect_correctReciprocities){
 
 TEST(reciprocityRatios, expect_correctReciprocities){
     DirectedGraph graph(5);
-    graph.addReciprocalEdgeIdx(0, 2);
-    graph.addEdgeIdx(2, 3);
-    graph.addReciprocalEdgeIdx(1, 3);
-    graph.addReciprocalEdgeIdx(1, 4);
-    graph.addEdgeIdx(4, 3);
+    graph.addReciprocalEdge(0, 2);
+    graph.addEdge(2, 3);
+    graph.addReciprocalEdge(1, 3);
+    graph.addReciprocalEdge(1, 4);
+    graph.addEdge(4, 3);
 
     auto reciprocityRatios = metrics::getReciprocityRatios(graph);
     EXPECT_EQ(reciprocityRatios[0], 1);

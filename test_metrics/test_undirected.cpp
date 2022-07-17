@@ -15,7 +15,7 @@ using namespace BaseGraph;
 
 
 TEST_F(UndirectedHouseGraph, when_findingPredecessors_expect_returnsCorrectPathsLengthsAndPredecessors){
-    auto shortestPaths = algorithms::findPredecessorsOfVertexIdx(graph, 4);
+    auto shortestPaths = algorithms::findPredecessorsOfVertex(graph, 4);
     EXPECT_EQ(shortestPaths.first[0], 2);
     EXPECT_EQ(shortestPaths.first[1], 1);
     EXPECT_EQ(shortestPaths.first[2], 2);
@@ -35,27 +35,27 @@ TEST_F(UndirectedHouseGraph, when_findingPredecessors_expect_returnsCorrectPaths
 }
 
 TEST_F(UndirectedHouseGraph, when_findingPathFromPredecessor_expect_correctPath){
-    auto shortestPaths = algorithms::findPredecessorsOfVertexIdx(graph, 4);
+    auto shortestPaths = algorithms::findPredecessorsOfVertex(graph, 4);
 
-    EXPECT_EQ(algorithms::findPathToVertexFromPredecessorsIdx(graph, 0, shortestPaths),
+    EXPECT_EQ(algorithms::findPathToVertexFromPredecessors(graph, 0, shortestPaths),
             list<BaseGraph::VertexIndex>({4, 3, 0}));
 
-    EXPECT_EQ(algorithms::findPathToVertexFromPredecessorsIdx(graph, 5, shortestPaths),
+    EXPECT_EQ(algorithms::findPathToVertexFromPredecessors(graph, 5, shortestPaths),
             list<BaseGraph::VertexIndex>({4, 3, 5}));
 }
 
 TEST_F(UndirectedHouseGraph, when_findingPathFromPredecessorToIsolatedVertex_expect_throwRuntimeError){
-    auto shortestPaths = algorithms::findPredecessorsOfVertexIdx(graph, 4);
-    EXPECT_THROW(algorithms::findPathToVertexFromPredecessorsIdx(graph, 6, shortestPaths), std::runtime_error);
+    auto shortestPaths = algorithms::findPredecessorsOfVertex(graph, 4);
+    EXPECT_THROW(algorithms::findPathToVertexFromPredecessors(graph, 6, shortestPaths), std::runtime_error);
 }
 
 TEST_F(UndirectedHouseGraph, when_findingPathFromPredecessorFromIsolatedVertex_expect_throwRuntimeError){
-    auto shortestPaths = algorithms::findPredecessorsOfVertexIdx(graph, 6);
-    EXPECT_THROW(algorithms::findPathToVertexFromPredecessorsIdx(graph, 0, shortestPaths), std::runtime_error);
+    auto shortestPaths = algorithms::findPredecessorsOfVertex(graph, 6);
+    EXPECT_THROW(algorithms::findPathToVertexFromPredecessors(graph, 0, shortestPaths), std::runtime_error);
 }
 
 TEST_F(TreeLikeGraph, when_findingAllPredecessors_expect_returnEveryPredecessor){
-    auto shortestPaths = algorithms::findAllPredecessorsOfVertexIdx(graph, 0).second;
+    auto shortestPaths = algorithms::findAllPredecessorsOfVertex(graph, 0).second;
 
     EXPECT_EQ(shortestPaths[7], algorithms::Path({6}));
     EXPECT_EQ(shortestPaths[6], algorithms::Path({3, 4, 5}));
@@ -67,17 +67,17 @@ TEST_F(TreeLikeGraph, when_findingAllPredecessors_expect_returnEveryPredecessor)
 }
 
 TEST_F(TreeLikeGraph, when_findingAllPredecessors_expect_returnEveryPath){
-    auto shortestPaths = algorithms::findAllPredecessorsOfVertexIdx(graph, 0);
-    auto geodesics = algorithms::findMultiplePathsToVertexFromPredecessorsIdx(graph, 4, shortestPaths);
+    auto shortestPaths = algorithms::findAllPredecessorsOfVertex(graph, 0);
+    auto geodesics = algorithms::findMultiplePathsToVertexFromPredecessors(graph, 4, shortestPaths);
 
     EXPECT_EQ(geodesics, algorithms::MultiplePaths({{0, 2, 4}, {0, 1, 4}}));
 
-    geodesics = algorithms::findMultiplePathsToVertexFromPredecessorsIdx(graph, 7, shortestPaths);
+    geodesics = algorithms::findMultiplePathsToVertexFromPredecessors(graph, 7, shortestPaths);
     EXPECT_EQ(geodesics, algorithms::MultiplePaths(
                 {{0, 2, 5, 6, 7}, {0, 2, 4, 6, 7},
                 {0, 1, 4, 6, 7}, {0, 1, 3, 6, 7} }));
 
-    geodesics = algorithms::findMultiplePathsToVertexFromPredecessorsIdx(graph, 1, shortestPaths);
+    geodesics = algorithms::findMultiplePathsToVertexFromPredecessors(graph, 1, shortestPaths);
     EXPECT_EQ(geodesics, list<list<BaseGraph::VertexIndex>>( {{0, 1}} ));
 }
 
@@ -153,13 +153,13 @@ TEST_F(TreeLikeGraph, expect_correctBetweenesses){
 }
 
 TEST_F(UndirectedHouseGraph, expect_correctTriangleCount){
-    EXPECT_EQ(metrics::countTrianglesAroundVertexIdx(graph, 0), 1);
-    EXPECT_EQ(metrics::countTrianglesAroundVertexIdx(graph, 1), 2);
-    EXPECT_EQ(metrics::countTrianglesAroundVertexIdx(graph, 2), 2);
-    EXPECT_EQ(metrics::countTrianglesAroundVertexIdx(graph, 3), 3);
-    EXPECT_EQ(metrics::countTrianglesAroundVertexIdx(graph, 4), 1);
-    EXPECT_EQ(metrics::countTrianglesAroundVertexIdx(graph, 5), 0);
-    EXPECT_EQ(metrics::countTrianglesAroundVertexIdx(graph, 6), 0);
+    EXPECT_EQ(metrics::countTrianglesAroundVertex(graph, 0), 1);
+    EXPECT_EQ(metrics::countTrianglesAroundVertex(graph, 1), 2);
+    EXPECT_EQ(metrics::countTrianglesAroundVertex(graph, 2), 2);
+    EXPECT_EQ(metrics::countTrianglesAroundVertex(graph, 3), 3);
+    EXPECT_EQ(metrics::countTrianglesAroundVertex(graph, 4), 1);
+    EXPECT_EQ(metrics::countTrianglesAroundVertex(graph, 5), 0);
+    EXPECT_EQ(metrics::countTrianglesAroundVertex(graph, 6), 0);
 }
 
 TEST_F(UndirectedHouseGraph, when_countingTriangles_expect_correctTriangleNumber){
@@ -189,7 +189,7 @@ TEST_F(UndirectedHouseGraph, when_findingKShellsAndOnionLayer_expect_correctAnsw
 }
 
 TEST_F(UndirectedHouseGraph, when_finding2Core_expect_vertices567){
-    graph.addEdgeIdx(0, 1); // Forms a 3-Core with vertices 1-2-3-4
+    graph.addEdge(0, 1); // Forms a 3-Core with vertices 1-2-3-4
     EXPECT_EQ(metrics::getKCore(graph, 2), list<BaseGraph::VertexIndex> ({4,5,6}));
 }
 
@@ -225,7 +225,7 @@ TEST_F(UndirectedHouseGraph, when_computingLocalClusteringCoefficients_expect_co
 }
 
 TEST_F(UndirectedHouseGraph, when_computingClusteringSpectrum_expect_correctAnswers) {
-    graph.addEdgeIdx(5, 6); // make the average not trivial (same local clustering for every degree)
+    graph.addEdge(5, 6); // make the average not trivial (same local clustering for every degree)
     auto clusteringSpectrum = metrics::getClusteringSpectrum(graph);
     unordered_map<size_t, double> expectedValues = {
         {2, 2/3.}, {3, 4/6.}, {5, 6/20.}
@@ -239,12 +239,12 @@ TEST_F(UndirectedHouseGraph, when_computingGlobalClusteringCoefficient_expect_co
 
 TEST_F(UndirectedHouseGraph, when_findingVertexNeighourhoodDegrees_expect_correctDegrees) {
     EXPECT_TRUE(
-            metrics::getNeighbourhoodDegreesOfVertexIdx(graph, 1) == list<size_t> ({2, 3, 5}) ||
-            metrics::getNeighbourhoodDegreesOfVertexIdx(graph, 1) == list<size_t> ({2, 5, 3}) ||
-            metrics::getNeighbourhoodDegreesOfVertexIdx(graph, 1) == list<size_t> ({3, 2, 5}) ||
-            metrics::getNeighbourhoodDegreesOfVertexIdx(graph, 1) == list<size_t> ({3, 5, 2}) ||
-            metrics::getNeighbourhoodDegreesOfVertexIdx(graph, 1) == list<size_t> ({5, 2, 3}) ||
-            metrics::getNeighbourhoodDegreesOfVertexIdx(graph, 1) == list<size_t> ({5, 3, 2}));
+            metrics::getNeighbourhoodDegreesOfVertex(graph, 1) == list<size_t> ({2, 3, 5}) ||
+            metrics::getNeighbourhoodDegreesOfVertex(graph, 1) == list<size_t> ({2, 5, 3}) ||
+            metrics::getNeighbourhoodDegreesOfVertex(graph, 1) == list<size_t> ({3, 2, 5}) ||
+            metrics::getNeighbourhoodDegreesOfVertex(graph, 1) == list<size_t> ({3, 5, 2}) ||
+            metrics::getNeighbourhoodDegreesOfVertex(graph, 1) == list<size_t> ({5, 2, 3}) ||
+            metrics::getNeighbourhoodDegreesOfVertex(graph, 1) == list<size_t> ({5, 3, 2}));
 }
 
 TEST_F(UndirectedHouseGraph, when_computingNeighbourDegreeSpectrum_expect_correctAnswer) {

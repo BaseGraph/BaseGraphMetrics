@@ -16,7 +16,7 @@ template <typename T> std::vector<double> getClosenessCentralities(const T& grap
 template <typename T> std::vector<double> getHarmonicCentralities(const T& graph);
 template <typename T> std::vector<double> getBetweennessCentralities(const T& graph, bool normalizeWithGeodesicNumber=true);
 
-template <typename T> std::vector<size_t> getShortestPathLengthsFromVertexIdx(const T& graph, VertexIndex sourceIdx);
+template <typename T> std::vector<size_t> getShortestPathLengthsFromVertex(const T& graph, VertexIndex source);
 template <typename T> std::vector<double> getShortestPathAverages(const T& graph);
 template <typename T> std::vector<double> getShortestPathHarmonicAverages(const T& graph);
 template <typename T> std::vector<size_t> getDiameters(const T& graph);

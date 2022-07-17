@@ -16,7 +16,7 @@ double getDegreeCorrelation(const UndirectedGraph& graph, double averageDegree);
 
 std::list<std::array<VertexIndex, 3>> findAllTriangles(const UndirectedGraph& graph);
 size_t countTriangles(const UndirectedGraph& graph);
-size_t countTrianglesAroundVertexIdx(const UndirectedGraph& graph, VertexIndex vertexIdx);
+size_t countTrianglesAroundVertex(const UndirectedGraph& graph, VertexIndex vertex);
 std::vector<double> getDegreeDistribution(const UndirectedGraph& graph);
 
 double getGlobalClusteringCoefficient(const UndirectedGraph& graph);
@@ -34,7 +34,7 @@ std::unordered_map<size_t, std::list<double>> getOnionSpectrum(const UndirectedG
 std::list<VertexIndex> getKCore(const UndirectedGraph& graph, size_t k);
 std::list<VertexIndex> getKCore(size_t k, const std::vector<size_t>& kshells);
 
-std::list<size_t> getNeighbourhoodDegreesOfVertexIdx(const UndirectedGraph& graph, VertexIndex vertexIdx);
+std::list<size_t> getNeighbourhoodDegreesOfVertex(const UndirectedGraph& graph, VertexIndex vertex);
 std::vector<double> getNeighbourDegreeSpectrum(const UndirectedGraph& graph, bool normalized=false);
 
 double getModularity(const UndirectedGraph& graph, const std::vector<size_t>& vertexCommunities);
