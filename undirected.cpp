@@ -1,5 +1,9 @@
 #include "undirected.h"
+#include "BaseGraph/directedgraph.h"
+#include "BaseGraph/types.h"
+#include "BaseGraph/undirectedgraph.h"
 
+#include <cstdio>
 #include <vector>
 #include <list>
 #include <set>
@@ -355,6 +359,146 @@ double getModularity(const UndirectedGraph& graph, const vector<size_t>& vertexC
 
     return modularity;
 }
+
+
+static size_t count4Cliques(const UndirectedGraph& graph, std::vector<int>& X, const std::unordered_set<VertexIndex>& triangles) {
+    size_t cliqueCount = 0;
+
+    for (auto w: triangles) {
+        for (auto r: graph.getNeighboursOf(w))
+            if (X[r]==2)
+                cliqueCount++;
+        X[w] = 0;
+    }
+    return cliqueCount;
+}
+
+static size_t countCycles(const UndirectedGraph& graph, std::vector<int>& X, const std::unordered_set<VertexIndex>& twoStars_u) {
+    size_t cycleCount = 0;
+
+    for (auto w: twoStars_u) {
+        for (auto r: graph.getNeighboursOf(w))
+            if (X[r]==3)
+                cycleCount++;
+        X[w] = 0;
+    }
+    return cycleCount;
+}
+
+static inline size_t choose2(size_t value) {
+    return (double)value*(value-1)/2;
+}
+
+static inline size_t choose3(size_t value) {
+    return (double)value*(value-1)*(value-2)/6;
+}
+
+static inline size_t choose4(size_t value) {
+    return (double) value*(value-1)*(value-2)*(value-3)/24;
+}
+
+std::unordered_map<std::string, size_t> countMotifs(const UndirectedGraph& graph, size_t maxMotifSize) {
+    if (maxMotifSize > 4)
+        fprintf(stderr, "Warning: only motifs of size 3 and 4 are supported.\n");
+
+    std::unordered_map<std::string, size_t> motifFrequencies = {
+        {"3:clique", 0}, {"3:2-star", 0}, // connected
+        {"3:edge", 0}, {"3:empty", 0}, // disconnected
+        {"4:clique", 0}, {"4:chordalcycle", 0}, {"4:tailedtriangle", 0}, {"4:cycle", 0}, {"4:3-star", 0}, {"4:path", 0}, // connected
+        {"4:triangle", 0}, {"4:2-star", 0}, {"4:2 edges", 0}, {"4:edge", 0}, {"4:empty", 0} // disconnected
+    };
+
+    std::unordered_set<VertexIndex> twoStars_u, twoStars_v, triangles, neighbourhood;
+    std::vector<int> X(graph.getSize(), 0);
+    auto edgeNumber = graph.getEdgeNumber();
+
+    size_t N_TT(0), N_SuSv(0), N_TSuVSv(0), N_SS(0), N_TI(0), N_SuVSvI(0), N_II(0), N_II1(0);
+    size_t N_edge_3;
+
+    for (const auto& edge: graph.edges) {
+        twoStars_u.clear(); twoStars_v.clear(); triangles.clear();
+
+        auto& u = edge.first;
+        auto& v = edge.second;
+        neighbourhood = {u, v};
+
+        for (auto w: graph.getNeighboursOf(u)) {
+            if (w==v)
+                continue;
+            X[w] = 1;
+            twoStars_u.insert(w);
+            neighbourhood.insert(w);
+        }
+
+        for (auto w: graph.getNeighboursOf(v)) {
+            if (w==u)
+                continue;
+
+            neighbourhood.insert(w);
+            if (X[w]==1) {
+                X[w] = 2;
+                triangles.insert(w);
+                twoStars_u.erase(w);
+            }
+            else {
+                twoStars_v.insert(w);
+                X[w] = 3;
+            }
+        }
+        N_edge_3 = graph.getSize() - neighbourhood.size();
+
+        motifFrequencies["3:clique"] += triangles.size();
+        motifFrequencies["3:2-star"] += twoStars_u.size()+twoStars_v.size();
+        motifFrequencies["3:edge"] += N_edge_3;
+
+        if (maxMotifSize == 3)
+            continue;
+
+        motifFrequencies["4:clique"] += count4Cliques(graph, X, triangles);
+        motifFrequencies["4:cycle"] += countCycles(graph, X, twoStars_u);
+
+        N_TT += choose2(triangles.size());
+        N_SuSv += twoStars_u.size()*twoStars_v.size();
+        N_TSuVSv += triangles.size()*(twoStars_u.size() + twoStars_v.size());
+        N_SS += choose2(twoStars_u.size()) + choose2(twoStars_v.size());
+
+        N_TI += triangles.size()*N_edge_3;
+        N_SuVSvI += N_edge_3*(twoStars_u.size() + twoStars_v.size());
+        N_II += choose2(N_edge_3);
+        N_II1 += edgeNumber - graph.getDegreeOf(u, false) - graph.getDegreeOf(v, false) + 1;
+
+        for (auto w: graph.getNeighboursOf(v))
+            X[w] = 0;
+    }
+    motifFrequencies["3:clique"] /= 3;
+    motifFrequencies["3:2-star"] /= 2;
+    motifFrequencies["3:empty"] = choose3(graph.getSize())
+        -motifFrequencies["3:clique"]-motifFrequencies["3:2-star"]-motifFrequencies["3:edge"];
+
+    if (maxMotifSize == 3)
+        return motifFrequencies;
+
+    motifFrequencies["4:clique"] /= 6;
+    motifFrequencies["4:chordalcycle"] = N_TT - 6*motifFrequencies["4:clique"];
+    motifFrequencies["4:tailedtriangle"] = N_TSuVSv-4*motifFrequencies["4:chordalcycle"];
+    motifFrequencies["4:cycle"] /= 4;
+    motifFrequencies["4:3-star"] = N_SS - motifFrequencies["4:tailedtriangle"];
+    motifFrequencies["4:path"] = N_SuSv - 4*motifFrequencies["4:cycle"];
+    motifFrequencies["4:triangle"] = N_TI - motifFrequencies["4:tailedtriangle"];
+    motifFrequencies["4:2-star"] = N_SuVSvI - 2*motifFrequencies["4:path"];
+    motifFrequencies["4:2 edges"] = N_II1;
+    motifFrequencies["4:edge"] = N_II - 2*motifFrequencies["4:2 edges"];
+
+    size_t nonEmptyMotifs4 = 0;
+    for (auto motif_count: motifFrequencies)
+        if (motif_count.first[0]=='4' && motif_count.first != "4:empty")
+            nonEmptyMotifs4 += motif_count.second;
+
+    motifFrequencies["4:empty"] = choose4(graph.getSize()) - nonEmptyMotifs4;
+
+    return motifFrequencies;
+}
+
 
 // From https://stackoverflow.com/questions/38993415/how-to-apply-the-intersection-between-two-lists-in-c
 template<typename T>

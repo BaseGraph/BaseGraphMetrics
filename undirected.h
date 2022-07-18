@@ -13,11 +13,12 @@ namespace BaseGraph { namespace metrics {
 
 double getDegreeCorrelation(const UndirectedGraph& graph);
 double getDegreeCorrelation(const UndirectedGraph& graph, double averageDegree);
+std::vector<double> getDegreeDistribution(const UndirectedGraph& graph);
 
 std::list<std::array<VertexIndex, 3>> findAllTriangles(const UndirectedGraph& graph);
 size_t countTriangles(const UndirectedGraph& graph);
 size_t countTrianglesAroundVertex(const UndirectedGraph& graph, VertexIndex vertex);
-std::vector<double> getDegreeDistribution(const UndirectedGraph& graph);
+std::unordered_map<std::string, size_t> countMotifs(const UndirectedGraph& graph, size_t maxMotifSize);
 
 double getGlobalClusteringCoefficient(const UndirectedGraph& graph);
 double getGlobalClusteringCoefficient(const UndirectedGraph& graph, const std::vector<size_t>& vertexTriangleNumbers);
