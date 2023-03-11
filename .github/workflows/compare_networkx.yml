@@ -24,7 +24,8 @@ jobs:
           cd base_graph
           cmake -B build
           cmake --build build
-          cmake --install build
+          cmake --install build --prefix="~/.local/"
+          echo "${HOME}/.local" >> $GITHUB_PATH
           pip install .
           cd ..
 
