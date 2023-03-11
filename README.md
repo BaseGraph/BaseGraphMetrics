@@ -1,3 +1,5 @@
+[![Test with NetworkX](https://github.com/SILIZ4/BaseGraphMetrics/actions/workflows/compare_networkx.yml/badge.svg)](https://github.com/SILIZ4/BaseGraphMetrics/actions/workflows/compare_networkx.yml)
+
 # BaseGraph - Metrics extension
 [BaseGraph] extension that provides various common graph metrics.
 
