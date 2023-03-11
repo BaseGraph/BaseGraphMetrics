@@ -23,7 +23,7 @@ static double getClosenessCentralityOfVertex(const T& graph, VertexIndex vertex)
     unsigned long long int sum = 0;
 
     for (VertexIndex& vertex: graph) {
-        if (shortestPathLengths[vertex] != algorithms::SIZE_T_MAX){
+        if (shortestPathLengths[vertex] != algorithms::BASEGRAPH_SIZE_T_MAX){
             componentSize += 1;
             sum += shortestPathLengths[vertex];
         }
@@ -47,7 +47,7 @@ static double getHarmonicCentralityOfVertex(const T& graph, VertexIndex vertex) 
 
     double harmonicSum = 0;
     for (VertexIndex& vertex: graph)
-        if (shortestPathLengths[vertex] != 0 && shortestPathLengths[vertex] != algorithms::SIZE_T_MAX)
+        if (shortestPathLengths[vertex] != 0 && shortestPathLengths[vertex] != algorithms::BASEGRAPH_SIZE_T_MAX)
             harmonicSum += 1.0/shortestPathLengths[vertex];
 
     return harmonicSum;
@@ -140,10 +140,10 @@ vector<size_t> getDiameters(const T& graph){
         largestDistance = shortestPathLengths[0];
 
         for (const VertexIndex& j: graph)
-           if (shortestPathLengths[j] > largestDistance && shortestPathLengths[j]!=algorithms::SIZE_T_MAX)
+           if (shortestPathLengths[j] > largestDistance && shortestPathLengths[j]!=algorithms::BASEGRAPH_SIZE_T_MAX)
               largestDistance = shortestPathLengths[j];
 
-        if (largestDistance == algorithms::SIZE_T_MAX)
+        if (largestDistance == algorithms::BASEGRAPH_SIZE_T_MAX)
             diameters[i] = 0;
         else
             diameters[i] = largestDistance;
@@ -159,7 +159,7 @@ static double getShortestPathAverageOfVertex(const T& graph, VertexIndex vertex)
     size_t componentSize = 1;
 
     for (VertexIndex& vertex: graph)
-        if (shortestPathLengths[vertex] != 0 && shortestPathLengths[vertex] != algorithms::SIZE_T_MAX) {
+        if (shortestPathLengths[vertex] != 0 && shortestPathLengths[vertex] != algorithms::BASEGRAPH_SIZE_T_MAX) {
             sum += shortestPathLengths[vertex];
             componentSize++;
         }
@@ -193,7 +193,7 @@ vector<unordered_map<size_t, double> > getShortestPathsDistribution(const T& gra
                 shortestPathLengths = getShortestPathLengthsFromVertex(graph, vertex);
 
                 for (const size_t& pathLength: shortestPathLengths) {
-                    if (pathLength!=0 && pathLength!=algorithms::SIZE_T_MAX) {
+                    if (pathLength!=0 && pathLength!=algorithms::BASEGRAPH_SIZE_T_MAX) {
                         if (currentDistribution.find(pathLength) == currentDistribution.end())
                             currentDistribution[pathLength] = 1;
                         else
@@ -217,7 +217,7 @@ static double getShortestPathHarmonicAverageOfVertex(const T& graph, VertexIndex
 
     double sumOfInverse = 0;
     for (VertexIndex& vertex: graph) {
-        if (shortestPathLengths[vertex] != 0 && shortestPathLengths[vertex] != algorithms::SIZE_T_MAX){
+        if (shortestPathLengths[vertex] != 0 && shortestPathLengths[vertex] != algorithms::BASEGRAPH_SIZE_T_MAX){
             componentSize += 1;
             sumOfInverse += 1.0/shortestPathLengths[vertex];
         }
