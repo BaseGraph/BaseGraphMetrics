@@ -1,9 +1,13 @@
-#include "directed.h"
+#include "BaseGraph/directedgraph.h"
+#include "BaseGraph/extensions/metrics/directed.h"
 
 #include <algorithm>
 #include <array>
 #include <map>
 #include <set>
+#include <list>
+#include <vector>
+#include <stdexcept>
 #include <unordered_set>
 
 

@@ -1,4 +1,4 @@
-#include "undirected.h"
+#include "BaseGraph/extensions/metrics/undirected.h"
 #include "BaseGraph/directedgraph.h"
 #include "BaseGraph/types.h"
 #include "BaseGraph/undirectedgraph.h"

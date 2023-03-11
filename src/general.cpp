@@ -1,5 +1,7 @@
-#include "general.h"
+#include "BaseGraph/extensions/metrics/general.h"
 
+#include <vector>
+#include <list>
 #include <queue>
 #include <unordered_map>
 
