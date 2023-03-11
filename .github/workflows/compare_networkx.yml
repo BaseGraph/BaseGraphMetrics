@@ -18,6 +18,17 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Install BaseGraph
+        run: |
+          git clone https://github.com/antoineallard/base_graph.git
+          cd base_graph
+          cmake -B build
+          cmake --build build
+          cmake --install build --prefix=".local"
+          echo "$(pwd)/.local" >> $GITHUB_PATH
+          pip install .
+          cd ..
+
       - name: Install BaseGraph and dependencies
         run: |
           pip install --upgrade pip
