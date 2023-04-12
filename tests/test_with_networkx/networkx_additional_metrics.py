@@ -112,5 +112,6 @@ def get_clustering_spectrum(graph):
                      np.histogram(d, bins=np.arange(0.5, np.max(d)+1.5, 1))[0])
                  if n > 0
                }
-    del spectrum[1]
+    if spectrum.get(1) is not None:
+        del spectrum[1]
     return spectrum

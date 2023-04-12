@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "BaseGraph/directedgraph.h"
-#include "BaseGraph/undirectedgraph.h"
+#include "BaseGraph/undirected_graph.hpp"
+#include "BaseGraph/directed_graph.hpp"
 
 
 class UndirectedHouseGraph: public::testing::Test{

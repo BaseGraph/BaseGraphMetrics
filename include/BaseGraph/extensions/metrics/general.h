@@ -3,8 +3,9 @@
 
 #include <vector>
 #include <list>
+#include <unordered_map>
 
-#include "BaseGraph/directedgraph.h"
+#include "BaseGraph/types.h"
 
 
 namespace BaseGraph { namespace metrics {

@@ -17,6 +17,7 @@ find_package(BaseGraph REQUIRED)
 
 add_subdirectory(src)
 if (BUILD_BINDINGS OR SKBUILD)
+    set(CMAKE_BUILD_TYPE Release)
     add_subdirectory(python)
 endif()
 if (BUILD_TESTS)

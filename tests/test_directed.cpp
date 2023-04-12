@@ -1,20 +1,19 @@
-#include <vector>
 #include <list>
 #include <utility>
+#include <vector>
 
-#include "gtest/gtest.h"
-#include "fixtures.hpp"
-#include "BaseGraph/algorithms/graphpaths.h"
-#include "BaseGraph/extensions/metrics/general.h"
+#include "BaseGraph/algorithms/paths.hpp"
 #include "BaseGraph/extensions/metrics/directed.h"
+#include "BaseGraph/extensions/metrics/general.h"
 #include "BaseGraph/extensions/metrics/undirected.h"
-
+#include "fixtures.hpp"
+#include "gtest/gtest.h"
 
 using namespace std;
 using namespace BaseGraph;
 
-
-TEST(HouseGraph_directed, when_findingTriangles_expect_returnAllUndirectedTriangles) {
+TEST(HouseGraph_directed,
+     when_findingTriangles_expect_returnAllUndirectedTriangles) {
     DirectedGraph graph(7);
     graph.addReciprocalEdge(0, 2);
     graph.addEdge(0, 3);
@@ -25,12 +24,16 @@ TEST(HouseGraph_directed, when_findingTriangles_expect_returnAllUndirectedTriang
     graph.addEdge(3, 4);
     graph.addEdge(5, 3);
 
-    list<array<BaseGraph::VertexIndex, 3>> expectedTriangles = {{0, 2, 3}, {1, 2, 3}, {1, 3, 4}};
+    list<array<BaseGraph::VertexIndex, 3>> expectedTriangles = {
+        {0, 2, 3}, {1, 2, 3}, {1, 3, 4}};
     EXPECT_EQ(metrics::findAllDirectedTriangles(graph), expectedTriangles);
 }
 
-static void expectClassifiedAs(map<string, size_t> spectrum, const string& triangleType) {
-    for (const string& type: list<string>({"3cycle", "3nocycle", "4cycle", "4outward", "4inward", "5cycle", "6cycle"})) {
+static void expectClassifiedAs(map<string, size_t> spectrum,
+                               const string &triangleType) {
+    for (const string &type :
+         list<string>({"3cycle", "3nocycle", "4cycle", "4outward", "4inward",
+                       "5cycle", "6cycle"})) {
         if (type == triangleType)
             EXPECT_EQ(spectrum[type], 1) << "With type=\"" << type << "\"\n";
         else
@@ -39,17 +42,22 @@ static void expectClassifiedAs(map<string, size_t> spectrum, const string& trian
 }
 
 static void underRotationsExpectClassifyTriangleAs(
-        const DirectedGraph& graph, const array<BaseGraph::VertexIndex, 3>& triangle, const string& triangleType) {
+    const DirectedGraph &graph,
+    const array<BaseGraph::VertexIndex, 3> &triangle,
+    const string &triangleType) {
     array<BaseGraph::VertexIndex, 3> rotatedTriangle;
-    for (const auto& rotation: list<array<BaseGraph::VertexIndex, 3>>({{0, 1, 2}, {1, 2, 0}, {2, 0, 1}}) ) {
-        for (BaseGraph::VertexIndex idx=0; idx<3; idx++)
+    for (const auto &rotation : list<array<BaseGraph::VertexIndex, 3>>(
+             {{0, 1, 2}, {1, 2, 0}, {2, 0, 1}})) {
+        for (BaseGraph::VertexIndex idx = 0; idx < 3; idx++)
             rotatedTriangle[idx] = triangle[rotation[idx]];
 
-        expectClassifiedAs(metrics::getTriangleSpectrum(graph, {triangle}), triangleType);
+        expectClassifiedAs(metrics::getTriangleSpectrum(graph, {triangle}),
+                           triangleType);
     }
 }
 
-TEST(DirectedTriangleSpectrum, when_clockwiseCycles_expect_classifiesTrianglesProperly) {
+TEST(DirectedTriangleSpectrum,
+     when_clockwiseCycles_expect_classifiesTrianglesProperly) {
     DirectedGraph graph(10);
     graph.addEdge(0, 1);
     graph.addEdge(1, 2);
@@ -77,7 +85,8 @@ TEST(DirectedTriangleSpectrum, when_clockwiseCycles_expect_classifiesTrianglesPr
     underRotationsExpectClassifyTriangleAs(graph, {7, 8, 9}, "6cycle");
 }
 
-TEST(DirectedTriangleSpectrum, when_counterClockwiseCycles_expect_classifiesTrianglesProperly) {
+TEST(DirectedTriangleSpectrum,
+     when_counterClockwiseCycles_expect_classifiesTrianglesProperly) {
     DirectedGraph graph(9);
     graph.addEdge(0, 2);
     graph.addEdge(2, 1);
@@ -102,7 +111,7 @@ TEST(DirectedTriangleSpectrum, when_counterClockwiseCycles_expect_classifiesTria
     underRotationsExpectClassifyTriangleAs(graph, {6, 7, 8}, "5cycle");
 }
 
-TEST(directedDensity, when_fiveEdgesAndNodes_expectDensityOfAQuarter){
+TEST(directedDensity, when_fiveEdgesAndNodes_expectDensityOfAQuarter) {
     DirectedGraph graph(5);
     graph.addEdge(0, 1);
     graph.addEdge(0, 2);
@@ -112,7 +121,7 @@ TEST(directedDensity, when_fiveEdgesAndNodes_expectDensityOfAQuarter){
     EXPECT_EQ(metrics::getDensity(graph), 0.25);
 }
 
-TEST(reciprocity, when_HalfReciprocitalEdges_expectHalf){
+TEST(reciprocity, when_HalfReciprocitalEdges_expectHalf) {
     DirectedGraph graph(5);
     graph.addReciprocalEdge(0, 1);
     graph.addEdge(2, 0);
@@ -121,7 +130,7 @@ TEST(reciprocity, when_HalfReciprocitalEdges_expectHalf){
     EXPECT_EQ(metrics::getReciprocity(graph), .5);
 }
 
-TEST(reciprocities, when_twoReciprocitalEdges_expectOne){
+TEST(reciprocities, when_twoReciprocitalEdges_expectOne) {
     DirectedGraph graph(5);
     graph.addReciprocalEdge(0, 1);
     graph.addEdge(2, 0);
@@ -135,7 +144,7 @@ TEST(reciprocities, when_twoReciprocitalEdges_expectOne){
     EXPECT_EQ(reciprocalDegrees[4], 0);
 }
 
-TEST(jaccardReciprocity, expect_correctReciprocities){
+TEST(jaccardReciprocity, expect_correctReciprocities) {
     DirectedGraph graph(5);
     graph.addReciprocalEdge(0, 2);
     graph.addEdge(2, 3);
@@ -146,12 +155,12 @@ TEST(jaccardReciprocity, expect_correctReciprocities){
     auto jaccardReciprocity = metrics::getJaccardReciprocities(graph);
     EXPECT_EQ(jaccardReciprocity[0], 1);
     EXPECT_EQ(jaccardReciprocity[1], 1);
-    EXPECT_EQ(jaccardReciprocity[2], (double)1/2 );
-    EXPECT_EQ(jaccardReciprocity[3], (double)1/3 );
-    EXPECT_EQ(jaccardReciprocity[4], (double)1/2 );
+    EXPECT_EQ(jaccardReciprocity[2], (double)1 / 2);
+    EXPECT_EQ(jaccardReciprocity[3], (double)1 / 3);
+    EXPECT_EQ(jaccardReciprocity[4], (double)1 / 2);
 }
 
-TEST(reciprocityRatios, expect_correctReciprocities){
+TEST(reciprocityRatios, expect_correctReciprocities) {
     DirectedGraph graph(5);
     graph.addReciprocalEdge(0, 2);
     graph.addEdge(2, 3);
@@ -162,29 +171,31 @@ TEST(reciprocityRatios, expect_correctReciprocities){
     auto reciprocityRatios = metrics::getReciprocityRatios(graph);
     EXPECT_EQ(reciprocityRatios[0], 1);
     EXPECT_EQ(reciprocityRatios[1], 1);
-    EXPECT_EQ(reciprocityRatios[2], (double)2/3 );
-    EXPECT_EQ(reciprocityRatios[3], (double)1/2 );
-    EXPECT_EQ(reciprocityRatios[4], (double)2/3 );
+    EXPECT_EQ(reciprocityRatios[2], (double)2 / 3);
+    EXPECT_EQ(reciprocityRatios[3], (double)1 / 2);
+    EXPECT_EQ(reciprocityRatios[4], (double)2 / 3);
 }
 
 TEST_F(DirectedHouseGraph, expect_correctDirectedLocalClustering) {
-    auto localClustering = metrics::getUndirectedLocalClusteringCoefficients(graph);
-    vector<double> expectedValues = {1., 4/6., 4/6., 6/20., 1., 0, 0};
+    auto localClustering =
+        metrics::getUndirectedLocalClusteringCoefficients(graph);
+    vector<double> expectedValues = {1., 4 / 6., 4 / 6., 6 / 20., 1., 0, 0};
     EXPECT_EQ(localClustering, expectedValues);
 }
 
 TEST_F(DirectedHouseGraph, expect_correctGlobalClustering) {
-    EXPECT_EQ(metrics::getUndirectedGlobalClusteringCoefficient(graph), 9./(9+9));
+    EXPECT_EQ(metrics::getUndirectedGlobalClusteringCoefficient(graph),
+              9. / (9 + 9));
 }
 
 TEST_F(DirectedHouseGraph, expect_correctOutDegreeHistogram) {
     auto outDegreeHistogram = metrics::getOutDegreeHistogram(graph);
-    map<size_t, size_t> expectedValues = {{0,2}, {1,3}, {2,1}, {4,1}};
+    map<size_t, size_t> expectedValues = {{0, 2}, {1, 3}, {2, 1}, {4, 1}};
     EXPECT_EQ(outDegreeHistogram, expectedValues);
 }
 
 TEST_F(DirectedHouseGraph, expect_correctInDegreeHistogram) {
     auto inDegreeHistogram = metrics::getInDegreeHistogram(graph);
-    map<size_t, size_t> expectedValues = {{0,1}, {1,4}, {2,1}, {3,1}};
+    map<size_t, size_t> expectedValues = {{0, 1}, {1, 4}, {2, 1}, {3, 1}};
     EXPECT_EQ(inDegreeHistogram, expectedValues);
 }

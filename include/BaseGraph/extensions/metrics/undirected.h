@@ -6,7 +6,7 @@
 #include <array>
 #include <unordered_map>
 
-#include "BaseGraph/undirectedgraph.h"
+#include "BaseGraph/undirected_graph.hpp"
 
 
 namespace BaseGraph { namespace metrics {
