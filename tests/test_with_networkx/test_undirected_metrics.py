@@ -125,37 +125,37 @@ def test_modularity(undirected_fixture):
     )
 
 
-def test_neighbourhood_degrees(undirected_fixture):
-    def bg_sorted_neighbourhood_degrees(graph, vertices):
-        neighbourhood_degrees = {}
+def test_neighbour_degrees(undirected_fixture):
+    def bg_sorted_neighbour_degrees(graph, vertices):
+        neighbours_degrees = {}
 
         for i, vertex in enumerate(vertices):
-            neighbour_degrees = metrics.get_neighbourhood_degrees_of_vertex(graph, i)
+            neighbour_degrees = metrics.get_neighbour_degrees(graph, i)
             neighbour_degrees.sort()
-            neighbourhood_degrees[vertex] = neighbour_degrees
-        return neighbourhood_degrees
+            neighbours_degrees[vertex] = neighbour_degrees
+        return neighbours_degrees
 
-    def nx_sorted_neighbourhood_degrees(graph):
+    def nx_sorted_neighbour_degrees(graph):
         degrees = graph.degree
-        neighbourhood_degrees = {}
+        neighbours_degrees = {}
 
         for vertex in graph:
             neighbour_degrees = [degrees[neighbour] for neighbour in graph.neighbors(vertex)]
             neighbour_degrees.sort()
-            neighbourhood_degrees[vertex] = neighbour_degrees
-        return neighbourhood_degrees
+            neighbours_degrees[vertex] = neighbour_degrees
+        return neighbours_degrees
 
     eq(
         undirected_fixture,
-        bg_sorted_neighbourhood_degrees,
-        nx_sorted_neighbourhood_degrees
+        bg_sorted_neighbour_degrees,
+        nx_sorted_neighbour_degrees
     )
 
 
 def test_average_neighbour_degree(undirected_fixture):
     approx_all_vertices(
         undirected_fixture,
-        lambda g: metrics.get_neighbourhood_degree_spectrum(g, False),
+        lambda g: metrics.get_neighbour_degree_spectrum(g, False),
         nx.average_neighbor_degree
     )
 
