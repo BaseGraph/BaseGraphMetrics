@@ -29,6 +29,14 @@ jobs:
           pip install .
           cd ..
 
+      - name: Install BaseGraphMetrics
+        run: |
+          cmake -B build
+          cmake --build build
+          cmake --install build --prefix=".local"
+          echo "$(pwd)/.local" >> $GITHUB_PATH
+          cd ..
+
       - name: Install BaseGraph and dependencies
         run: |
           pip install --upgrade pip
