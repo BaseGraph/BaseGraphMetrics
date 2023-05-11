@@ -1,7 +1,9 @@
 find_package(pybind11 REQUIRED)
+find_package(BaseGraphMetrics REQUIRED)
 
 pybind11_add_module(_${EXTENSION_NAME} MODULE pybind.cpp)
-target_link_libraries(_${EXTENSION_NAME} PRIVATE ${EXTENSION_NAME} BaseGraph::core)
+target_link_libraries(_${EXTENSION_NAME} PRIVATE BaseGraph::core
+    BaseGraph::${EXTENSION_NAME})
 
 install(TARGETS _${EXTENSION_NAME} DESTINATION ./basegraph/${EXTENSION_NAME})
 install(FILES ${EXTENSION_NAME}/__init__.py DESTINATION ./basegraph/${EXTENSION_NAME})

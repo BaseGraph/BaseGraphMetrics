@@ -163,6 +163,6 @@ def test_average_neighbour_degree(undirected_fixture):
 def test_connected_components(undirected_fixture):
     eq(
         undirected_fixture,
-        lambda g, vertices: [ set(vertices[i] for i in component) for component in metrics.find_connected_components(g) ],
+        lambda g, vertices: [ set(vertices[i] for i in component) for component in metrics.find_weakly_connected_components(g) ],
         lambda g: list(nx.algorithms.components.connected_components(g))
     )

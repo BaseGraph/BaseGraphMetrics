@@ -15,7 +15,13 @@ endif()
 set(EXTENSION_NAME metrics)
 find_package(BaseGraph REQUIRED)
 
-add_subdirectory(src)
+
+add_library(${EXTENSION_NAME} INTERFACE)
+target_include_directories(${EXTENSION_NAME} INTERFACE
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
+target_link_libraries(${EXTENSION_NAME} INTERFACE BaseGraph::core)
+
 if (BUILD_BINDINGS OR SKBUILD)
     set(CMAKE_BUILD_TYPE Release)
     add_subdirectory(python)

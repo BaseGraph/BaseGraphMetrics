@@ -1,6 +1,4 @@
 add_library(${EXTENSION_NAME}
-    ${CMAKE_CURRENT_SOURCE_DIR}/directed.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/undirected.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/general.cpp
 )
 

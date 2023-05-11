@@ -12,9 +12,9 @@ using namespace std;
 using namespace BaseGraph;
 
 TEST_F(UndirectedHouseGraph,
-       when_findingConnectedComponents_expect_returnsCorrectComponents) {
+       when_findingWeaklyConnectedComponents_expect_returnsCorrectComponents) {
     list<BaseGraph::metrics::Component> components =
-        metrics::findConnectedComponents(graph);
+        metrics::findWeaklyConnectedComponents(graph);
     auto component = components.begin();
 
     EXPECT_EQ(*component, BaseGraph::metrics::Component({0, 2, 3, 1, 4, 5}));
@@ -183,17 +183,17 @@ TEST_F(UndirectedHouseGraph,
 
 TEST_F(UndirectedHouseGraph,
        when_findingVertexNeighourhoodDegrees_expect_correctDegrees) {
-    EXPECT_TRUE(metrics::getNeighbourhoodDegreesOfVertex(graph, 1) ==
+    EXPECT_TRUE(metrics::getNeighbourDegrees(graph, 1) ==
                     list<size_t>({2, 3, 5}) ||
-                metrics::getNeighbourhoodDegreesOfVertex(graph, 1) ==
+                metrics::getNeighbourDegrees(graph, 1) ==
                     list<size_t>({2, 5, 3}) ||
-                metrics::getNeighbourhoodDegreesOfVertex(graph, 1) ==
+                metrics::getNeighbourDegrees(graph, 1) ==
                     list<size_t>({3, 2, 5}) ||
-                metrics::getNeighbourhoodDegreesOfVertex(graph, 1) ==
+                metrics::getNeighbourDegrees(graph, 1) ==
                     list<size_t>({3, 5, 2}) ||
-                metrics::getNeighbourhoodDegreesOfVertex(graph, 1) ==
+                metrics::getNeighbourDegrees(graph, 1) ==
                     list<size_t>({5, 2, 3}) ||
-                metrics::getNeighbourhoodDegreesOfVertex(graph, 1) ==
+                metrics::getNeighbourDegrees(graph, 1) ==
                     list<size_t>({5, 3, 2}));
 }
 
