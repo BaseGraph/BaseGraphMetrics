@@ -1,0 +1,39 @@
+name: C++ unit tests
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  test_all:
+    name: Test all metrics
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install BaseGraph
+      run: |
+        git clone https://github.com/antoineallard/base_graph.git
+        cd base_graph
+        cmake -B build
+        cmake --build build
+        cmake --install build --prefix="${GITHUB_WORKSPACE}/.local"
+        echo "${GITHUB_WORKSPACE}/.local" >> $GITHUB_PATH
+        pip install .
+        cd ..
+
+    - name: Configure and build CMake
+      run: |
+        cmake -B "${GITHUB_WORKSPACE}/build" -DBUILD_TESTS=ON
+        cmake --build ${{github.workspace}}/build
+
+    - name: Run unit tests
+      working-directory: ${GITHUB_WORKSPACE}/build
+      run: ctest --verbose
