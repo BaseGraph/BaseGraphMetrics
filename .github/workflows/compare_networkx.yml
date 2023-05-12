@@ -2,9 +2,9 @@ name: Wrapper tests
 
 on:
   push:
-    branches: [ main, fix-workflow ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main, fix-workflow ]
+    branches: [ main, dev ]
 
 jobs:
   test_wrapper:

@@ -18,7 +18,8 @@ find_package(BaseGraph REQUIRED)
 
 add_library(${EXTENSION_NAME} INTERFACE)
 target_include_directories(${EXTENSION_NAME} INTERFACE
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(${EXTENSION_NAME} INTERFACE BaseGraph::core)
 
