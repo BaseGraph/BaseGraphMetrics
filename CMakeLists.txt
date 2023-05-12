@@ -13,7 +13,7 @@ else()
 endif()
 
 set(EXTENSION_NAME metrics)
-find_package(BaseGraph REQUIRED)
+find_package(BaseGraph 0.4 REQUIRED)
 
 
 add_library(${EXTENSION_NAME} INTERFACE)

@@ -31,6 +31,7 @@ jobs:
 
       - name: Install BaseGraph and dependencies
         run: |
+          echo "$PATH"
           pip install --upgrade pip
           pip install -r tests/requirements.txt
           pip install .
