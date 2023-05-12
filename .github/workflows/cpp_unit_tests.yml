@@ -27,15 +27,15 @@ jobs:
         cd base_graph
         cmake -B build
         cmake --build build
-        cmake --install build --prefix="${GITHUB_WORKSPACE}/.local"
-        echo "${GITHUB_WORKSPACE}/.local" >> $GITHUB_PATH
+        cmake --install build --prefix="$GITHUB_WORKSPACE/.local"
+        echo "$GITHUB_WORKSPACE/.local" >> $GITHUB_PATH
         pip install .
         cd ..
 
     - name: Configure and build CMake
       run: |
-        cmake -B "${GITHUB_WORKSPACE}/build" -DBUILD_TESTS=ON
-        cmake --build ${{github.workspace}}/build
+        cmake -B "$GITHUB_WORKSPACE/build" -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/.local"
+        cmake --build "$GITHUB_WORKSPACE/build"
 
     - name: Run unit tests
       working-directory: ${GITHUB_WORKSPACE}/build
