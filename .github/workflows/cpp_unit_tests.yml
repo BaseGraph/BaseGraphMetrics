@@ -38,5 +38,5 @@ jobs:
         cmake --build "$GITHUB_WORKSPACE/build"
 
     - name: Run unit tests
-      working-directory: ${GITHUB_WORKSPACE}/build
+      working-directory: ${{github.workspace}}/build
       run: ctest --verbose
