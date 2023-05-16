@@ -34,7 +34,7 @@ jobs:
 
     - name: Configure and build CMake
       run: |
-        cmake -B "$GITHUB_WORKSPACE/build" -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/.local"
+        cmake -B "$GITHUB_WORKSPACE/build" -DBUILD_TESTS=ON
         cmake --build "$GITHUB_WORKSPACE/build"
 
     - name: Run unit tests
