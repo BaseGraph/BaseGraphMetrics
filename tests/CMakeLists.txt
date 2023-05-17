@@ -1,9 +1,17 @@
-if(WIN32 AND DEFINED ENV{GITHUB_ACTIONS})
-    set(GTEST_ROOT "D:/gtest")
-endif()
+if (DEFINED ENV{GITHUB_ACTIONS})
+    if (WIN32)
+        link_directories("D:/gtest/lib")
+        include_directories("D:/gtest/include")
 
-
-find_package(GTest REQUIRED)
+        set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+        set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+    elseif (APPLE)
+        link_directories("/usr/local/lib")
+        include_directories("/usr/local/include")
+    endif ()
+else ()
+    find_package(GTest REQUIRED)
+endif ()
 
 set(TEST_FILES_NAMES test_directed test_undirected)
 
