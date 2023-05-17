@@ -25,9 +25,9 @@ jobs:
       run: |
         git clone https://github.com/antoineallard/base_graph.git
         cd base_graph
-        cmake -B "${{github.workspace}}/build"
-        cmake --build "${{github.workspace}}/build"
-        cmake --install "${{github.workspace}}/build" --prefix "${{github.workspace}}/local_install"
+        cmake -B build
+        cmake --build build
+        cmake --install build --prefix "${{github.workspace}}/local_install"
         pip3 install .
         cd ..
 
