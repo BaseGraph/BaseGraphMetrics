@@ -1,3 +1,8 @@
+if(WIN32 AND DEFINED ENV{GITHUB_ACTIONS})
+    set(GTEST_ROOT "D:/gtest")
+endif()
+
+
 find_package(GTest REQUIRED)
 
 set(TEST_FILES_NAMES test_directed test_undirected)
