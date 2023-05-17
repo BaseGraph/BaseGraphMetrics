@@ -1,5 +1,6 @@
 if (DEFINED ENV{GITHUB_ACTIONS})
     if (WIN32)
+        set(CMAKE_BUILD_TYPE Release)
         link_directories("D:/gtest/lib")
         include_directories("D:/gtest/include")
 
