@@ -25,21 +25,16 @@ jobs:
       run: |
         git clone https://github.com/antoineallard/base_graph.git
         cd base_graph
-        cmake -B build
-        cmake --build build
-        cmake --install build --prefix=".local"
-        if [ "$RUNNER_OS" == "Windows" ]; then
-          echo "$(cd)\.local" >> $GITHUB_PATH
-        else
-          echo "$(pwd)/.local" >> $GITHUB_PATH
-        fi
+        cmake -B "${{github.workspace}}/build"
+        cmake --build "${{github.workspace}}/build"
+        cmake --install "${{github.workspace}}/build" --prefix "${{github.workspace}}/local_install"
         pip3 install .
         cd ..
 
     - name: Configure and build CMake
       run: |
-        cmake -B "$GITHUB_WORKSPACE/build" -DBUILD_TESTS=ON
-        cmake --build "$GITHUB_WORKSPACE/build"
+        cmake -B "${{github.workspace}}/build" -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH="${{github.workspace}}/local_install"
+        cmake --build "${{github.workspace}}/build"
 
     - name: Run unit tests
       working-directory: ${{github.workspace}}/build
