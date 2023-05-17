@@ -11,14 +11,19 @@ if (BUILD_TESTS)
 else()
     set(CXX_STANDARD 11)
 endif()
+set(CXX_STANDARD_REQUIRED)
+set(CMAKE_CXX_EXTENSIONS OFF)
+if (APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CXX_STANDARD} -stdlib=libc++")
+endif()
 
 set(EXTENSION_NAME metrics)
-find_package(BaseGraph REQUIRED)
+find_package(BaseGraph 0.4 REQUIRED)
 
 
 add_library(${EXTENSION_NAME} INTERFACE)
 target_include_directories(${EXTENSION_NAME} INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(${EXTENSION_NAME} INTERFACE BaseGraph::core)
@@ -38,7 +43,7 @@ if (NOT SKBUILD)
 
     # Install headers
     install(
-        DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/BaseGraph"
+        DIRECTORY "${PROJECT_SOURCE_DIR}/include/BaseGraph"
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
@@ -61,7 +66,7 @@ if (NOT SKBUILD)
     )
 
     configure_package_config_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
+        "${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
         "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
         INSTALL_DESTINATION ${BASEGRAPH_EXPORT_DIR}
     )
