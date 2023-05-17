@@ -54,8 +54,8 @@ getReciprocalDegrees(const LabeledDirectedGraph<EdgeLabel> &graph) {
 template <typename EdgeLabel>
 std::vector<double>
 getJaccardReciprocities(const LabeledDirectedGraph<EdgeLabel> &graph,
-                        const std::vector<size_t> reciprocities,
-                        const std::vector<size_t> inDegrees) {
+                        const std::vector<size_t> &reciprocities,
+                        const std::vector<size_t> &inDegrees) {
     if (reciprocities.size() != graph.getSize() ||
         inDegrees.size() != graph.getSize())
         throw std::logic_error(
@@ -83,8 +83,8 @@ getJaccardReciprocities(const LabeledDirectedGraph<EdgeLabel> &graph) {
 template <typename EdgeLabel>
 std::vector<double>
 getReciprocityRatios(const LabeledDirectedGraph<EdgeLabel> &graph,
-                     const std::vector<size_t> reciprocities,
-                     const std::vector<size_t> inDegrees) {
+                     const std::vector<size_t> &reciprocities,
+                     const std::vector<size_t> &inDegrees) {
     if (reciprocities.size() != graph.getSize() ||
         inDegrees.size() != graph.getSize())
         throw std::logic_error(

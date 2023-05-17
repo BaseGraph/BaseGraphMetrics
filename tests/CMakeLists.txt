@@ -4,7 +4,6 @@ if (DEFINED ENV{GITHUB_ACTIONS})
         include_directories("D:/gtest/include")
 
         set(CMAKE_CXX_FLAGS_RELEASE "/MT")
-        set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
     elseif (APPLE)
         link_directories("/usr/local/lib")
         include_directories("/usr/local/include")
