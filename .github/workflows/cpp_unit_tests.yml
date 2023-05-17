@@ -27,9 +27,13 @@ jobs:
         cd base_graph
         cmake -B build
         cmake --build build
-        cmake --install build --prefix="$GITHUB_WORKSPACE/.local"
-        echo "$GITHUB_WORKSPACE/.local" >> $GITHUB_PATH
-        pip install .
+        cmake --install build --prefix=".local"
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          echo "$(cd)\.local" >> $GITHUB_PATH
+        else
+          echo "$(pwd)/.local" >> $GITHUB_PATH
+        fi
+        pip3 install .
         cd ..
 
     - name: Configure and build CMake
