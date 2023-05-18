@@ -23,8 +23,8 @@ find_package(BaseGraph 0.4 REQUIRED)
 
 add_library(${EXTENSION_NAME} INTERFACE)
 target_include_directories(${EXTENSION_NAME} INTERFACE
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include
+    "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+    "$<INSTALL_INTERFACE:include>"
 )
 target_link_libraries(${EXTENSION_NAME} INTERFACE BaseGraph::core)
 
